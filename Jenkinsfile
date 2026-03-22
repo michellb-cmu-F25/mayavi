@@ -16,21 +16,15 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                    
                     sh """
                     ${scannerHome}/bin/sonar-scanner \
                       -Dsonar.projectKey=Mayavi-Analysis \
                       -Dsonar.sources=. \
                       -Dsonar.host.url=http://sonarqube-service \
-                      -Dsonar.login=\${SONAR_AUTH_TOKEN}
+                      -Dsonar.login=\${SONAR_AUTH_TOKEN} \
+                      -Dsonar.qualitygate.wait=true
                     """
                 }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                waitForQualityGate abortPipeline: true
             }
         }
 
@@ -41,6 +35,7 @@ pipeline {
 
                     sh "gsutil rm -rf gs://${bucketName}/repo-output/ || true"
                     sh "gsutil cp -r . gs://${bucketName}/repo-input/"
+
                     sh """
                     gcloud dataproc jobs submit pyspark line_count.py \
                         --cluster=hadoop-cluster-michelle \
