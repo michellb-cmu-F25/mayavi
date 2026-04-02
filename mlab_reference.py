@@ -88,6 +88,8 @@ def is_valid_rst(string):
         return False
     else:
         return True
+def test(string):
+        return True
 
 
 def document_function(func, func_name=None, example_code=None,
