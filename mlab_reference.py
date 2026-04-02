@@ -72,6 +72,7 @@ def relpath(target, base=os.curdir):
     return os.path.join(*rel_list)
 
 
+
 def is_valid_rst(string):
     """ Check if the given string can be compiled to rst.
     """
